@@ -68,3 +68,5 @@ def delete_user(req,id):
     except:
       return HttpResponse("Invalid Method")
        
+def show(req):
+   return JsonResponse({"Details":"User Details shown"})
