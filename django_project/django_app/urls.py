@@ -7,6 +7,7 @@ urlpatterns=[
     path("get_user/",view=views.get_user),
     path("update_user/<int:id>",view=views.update_user),
     path("delete_user/<int:id>",view=views.delete_user),
-    path("show/",view=views.show)
+    path("show/",view=views.show),
+    path("reg_form/",view=views.reg_form)
      
 ]

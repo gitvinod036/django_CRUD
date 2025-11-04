@@ -4,6 +4,7 @@ from django.views.decorators.csrf  import csrf_exempt
 from django.http import HttpResponse,JsonResponse
 from .serializer import Student_Seralizer
 from .models import StudentDetails
+import cloudinary
 
 # Create your views here.
 @csrf_exempt
@@ -17,8 +18,8 @@ def reg_user(req):
             return HttpResponse("New user Added Succesfully")
          else:
             return HttpResponse("Not Valid")
-    except:
-        return HttpResponse("Invalid Data")
+    except Exception as e:
+        return HttpResponse(f"Invalid Data {e}")
     
 
 @csrf_exempt
@@ -35,9 +36,9 @@ def get_user(req,id=None):
             return JsonResponse({"details":all_user_data.data},safe=False)
       else:
          return HttpResponse("Invalid Method")
-    except:
-       return HttpResponse("Invalid Data")
-       
+    except Exception as e:
+       return HttpResponse(f"Invalid Data/{e}")
+        
 
 @csrf_exempt
 def update_user(req,id):
@@ -51,8 +52,8 @@ def update_user(req,id):
           return HttpResponse("Updated Successfully")
        else:
           return HttpResponse("Invalid Data")
-   except:
-      return HttpResponse("Invalid Method/Data")
+   except Exception as e:
+      return HttpResponse("Invalid Method/ {e}")
    
 
 @csrf_exempt
@@ -65,8 +66,26 @@ def delete_user(req,id):
          return HttpResponse("Deleted Successfully")
        else:
          return HttpResponse("Need Id to Delete")
-    except:
-      return HttpResponse("Invalid Method")
+    except Exception as e:
+      return HttpResponse(f"Invalid Method  {e}")
        
 def show(req):
    return JsonResponse({"Details":"User Details shown"})
+
+
+@csrf_exempt
+def reg_form(req):
+      if req.method=="POST": 
+        try:
+          id=req.POST.get("id")
+          user_name=req.POST.get("name")
+          user_email=req.POST.get("email")
+          user_mob=req.POST.get("mobile")
+          img_url=req.FILES.get("profile")
+          img_url=cloudinary.uploader.upload(img_url)
+          Created=StudentDetails.objects.create(stu_id=id,stu_name=user_name,stu_email=user_email,stu_mobile=user_mob,profile_pic=img_url["secure_url"])
+          return HttpResponse("New user Registered")
+        except Exception as e:
+           return HttpResponse(f"Invalid Data {e}")
+      else:
+         return HttpResponse("Method should be POST to add New USER")

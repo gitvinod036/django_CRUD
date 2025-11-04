@@ -17,3 +17,4 @@ class StudentDetails(models.Model):
         ],
         help_text="Enter a valid 10-digit mobile number starting with 6-9."
     )
+    profile_pic=models.URLField(default="empty")
