@@ -52,8 +52,10 @@ def update_user(req,id):
           return HttpResponse("Updated Successfully")
        else:
           return HttpResponse("Invalid Data")
+    else:
+       return HttpResponse("Invalid Method")
    except Exception as e:
-      return HttpResponse("Invalid Method/ {e}")
+      return HttpResponse(" Errot : {e}")
    
 
 @csrf_exempt
@@ -89,3 +91,5 @@ def reg_form(req):
            return HttpResponse(f"Invalid Data {e}")
       else:
          return HttpResponse("Method should be POST to add New USER")
+ 
+ 
