@@ -92,4 +92,45 @@ def reg_form(req):
       else:
          return HttpResponse("Method should be POST to add New USER")
  
- 
+# @csrf_exempt
+# def update_form(req,id):
+#    # if req.method in ['PUT','PATCH']:
+#     user_data={}
+#     user_to_be_updated=StudentDetails.objects.get(stu_id=id)
+#     for key in req.POST:
+#       user_data[key]=req.POST[key]
+#     print(user_data)
+   #    serialized=Student_Seralizer(user_to_be_updated,data=user_data,partial=True)
+   #    if serialized.is_valid():
+   #       serialized.save()
+   #       return HttpResponse("Updated Sucessfully")
+   #    return HttpResponse("Data is Not Valid")
+   # else:
+   #    return HttpResponse("Use Valid Method")
+
+@csrf_exempt
+def update_form(request, id):
+    try:
+        student = StudentDetails.objects.get(stu_id=id)
+    except StudentDetails.DoesNotExist:
+        return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Determine if partial update or full
+    partial = (request.method == 'PATCH')
+    serializer = Student_Serializer(student, data=request.data, partial=partial)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'message': 'Updated Successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+def homepage(req):
+    Welcome="Welcome to Django Application"
+    Requests= """<br>List Of Operations <br>reg_user ---can register user using json data <br> 
+     get_user/id -- get user with id <br>  
+    get_user --to get all the users <br> 
+    update_user/id --To Update User <br>
+    delete_user/id --To Delete User with Id <br>
+    reg_user/ --To Register New User"""
+    return HttpResponse(f"{Welcome}  {Requests}")
